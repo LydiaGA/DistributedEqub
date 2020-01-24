@@ -15,7 +15,7 @@ type Equb struct {
 	Winner       Member
 	Status       string
 
-	NextServer Member
+	NextServerID uint
 }
 
 type Member struct {
@@ -33,9 +33,14 @@ type Member struct {
 func (model *Equb) CreateEqub(database *gorm.DB) {
 	if len(FindEqub(database)) == 0 {
 		database.Create(model)
-		for _, member := range model.Members {
+	}
+
+	for _, member := range model.Members {
+		memberFound := FindMember(database, member.ID)
+		if memberFound.ID != 0 {
 			database.Create(&member)
 		}
+
 	}
 }
 
@@ -46,8 +51,20 @@ func FindEqub(database *gorm.DB) []Equb {
 	return equbs
 }
 
-func (model *Member) CreateMember(database *gorm.DB) {
+func (model *Equb) SetNextServer(database *gorm.DB, member Member) {
+	model.NextServerID = member.ID
+	database.Save(&model)
+}
+
+func (model *Member) CreateMember(database *gorm.DB, equb Equb) {
+	model.EqubID = equb.ID
 	database.Create(model)
+}
+
+func FindMember(database *gorm.DB, id uint) Member {
+	var member Member
+	database.First(&member, "ID = ?", id)
+	return member
 }
 
 func GetDatabase() *gorm.DB {

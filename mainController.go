@@ -1,9 +1,9 @@
 package main
 
 import (
-	"equb/config"
-	db2 "equb/db"
-	"equb/rpc"
+	"equb1/DistributedEqub/config"
+	db2 "equb1/DistributedEqub/db"
+	"equb1/DistributedEqub/rpc"
 )
 
 func StartServer(name string, month string) {
@@ -36,7 +36,5 @@ func StartClient(address string, name string, amount int) {
 	}
 
 	equb := rpc.StartClient(member)
-
 	equb.CreateEqub(db)
-	defer db.Close()
 }

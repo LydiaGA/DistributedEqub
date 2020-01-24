@@ -1,8 +1,11 @@
 package main
 
 import (
-	db2 "equb/db"
+	"bufio"
+	db2 "equb1/DistributedEqub/db"
 	"fmt"
+	"os"
+	"strings"
 	"time"
 )
 
@@ -39,6 +42,8 @@ func main() {
 	fmt.Println("(1) Create")
 	fmt.Println("(2) Join")
 
+	in := bufio.NewReader(os.Stdin)
+
 	var role int
 	_, _ = fmt.Scanf("%d", &role)
 
@@ -46,12 +51,14 @@ func main() {
 		fmt.Println("Enter the Name of the Equb")
 
 		var name string
-		_, _ = fmt.Scanln(&name)
+		name, _ = in.ReadString('\n')
+		name = strings.TrimSuffix(name, "\n")
 
 		fmt.Println("Enter the Starting Month")
 
 		var month string
-		_, _ = fmt.Scanln(&month)
+		month, _ = in.ReadString('\n')
+		month = strings.TrimSuffix(month, "\n")
 
 		fmt.Println("Enter 'start' to Start the Equb or 'exit' to Exit")
 
@@ -60,7 +67,8 @@ func main() {
 		go StartServer(name, month)
 
 		var command string
-		_, _ = fmt.Scanln(&command)
+		command, _ = in.ReadString('\n')
+		command = strings.TrimSuffix(command, "\n")
 
 		if command == "start" {
 			StartEqub()
@@ -72,12 +80,14 @@ func main() {
 		fmt.Println("Enter Address of Server")
 
 		var address string
-		_, _ = fmt.Scanln(&address)
+		address, _ = in.ReadString('\n')
+		address = strings.TrimSuffix(address, "\n")
 
 		fmt.Println("Enter your name")
 
 		var name string
-		_, _ = fmt.Scanln(&name)
+		name, _ = in.ReadString('\n')
+		name = strings.TrimSuffix(name, "\n")
 
 		fmt.Println("Enter the Amount you are Going to Pay")
 
@@ -111,7 +121,7 @@ func main() {
 			}
 		}
 
-		var command string
-		_, _ = fmt.Scanln(&command)
+		//var command string
+		//command, _ = in.ReadString('\n')
 	}
 }
