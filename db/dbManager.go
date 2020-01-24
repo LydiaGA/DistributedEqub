@@ -9,36 +9,39 @@ import (
 type Equb struct {
 	gorm.Model
 
-	Name     string
-	CurrentMonth  string
-	Members []Member `gorm:"foreignkey:EqubRefer"`
-	Winner Member
+	Name         string
+	CurrentMonth string
+	Members      []Member
+	Winner       Member
+	Status       string
 
 	NextServer Member
 }
 
-type Member struct{
+type Member struct {
 	gorm.Model
 
 	EqubID uint
 
-	Name string
+	Name    string
 	HasPaid bool
-	Amount int
+	Amount  int
 
 	IP string
 }
 
 func (model *Equb) CreateEqub(database *gorm.DB) {
-	database.Create(model)
-	for _, member := range model.Members {
-		database.Create(&member)
+	if len(FindEqub(database)) == 0 {
+		database.Create(model)
+		for _, member := range model.Members {
+			database.Create(&member)
+		}
 	}
 }
 
-func FindAllEqub(database *gorm.DB) []Equb{
-	equbs := []Equb {}
-	database.Preload("Members").Find(&equbs)
+func FindEqub(database *gorm.DB) []Equb {
+	equbs := []Equb{}
+	database.Preload("Members").First(&equbs)
 
 	return equbs
 }

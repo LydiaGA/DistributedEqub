@@ -6,29 +6,33 @@ import (
 	"equb/rpc"
 )
 
-func StartServer(name string, month string){
+func StartServer(name string, month string) {
 	db := db2.GetDatabase()
-
-	if db2.FindAllEqub(db) == nil {
-		equb := db2.Equb{Name: name, CurrentMonth: month}
-		equb.CreateEqub(db)
-	}
+	equb := db2.Equb{Name: name, CurrentMonth: month, Status: "created"}
+	equb.CreateEqub(db)
 
 	defer db.Close()
 
 	rpc.Serve()
 }
 
-func StartClient(address string, name string, amount int){
+func StartEqub() {
+	db := db2.GetDatabase()
+	equb := db2.FindEqub(db)[0]
+	equb.Status = "started"
+	db.Save(&equb)
+}
+
+func StartClient(address string, name string, amount int) {
 	config.ServerIP = address
 	db := db2.GetDatabase()
 	defer db.Close()
 
-	member:= db2.Member{
-		Name:       name,
-		HasPaid:    false,
-		Amount:     amount,
-		IP:         config.IP,
+	member := db2.Member{
+		Name:    name,
+		HasPaid: false,
+		Amount:  amount,
+		IP:      config.IP,
 	}
 
 	equb := rpc.StartClient(member)

@@ -11,6 +11,11 @@ import (
 
 type SERVER int
 
+type Result struct {
+	Message string
+	Equb    db2.Equb
+}
+
 func Serve() {
 	serverPort := config.Port
 
@@ -22,7 +27,7 @@ func Serve() {
 
 	rpc.HandleHTTP()
 
-	listener, err := net.Listen("tcp", ":" + serverPort)
+	listener, err := net.Listen("tcp", ":"+serverPort)
 
 	if err != nil {
 		log.Fatal("Listener Error", err)
@@ -41,15 +46,26 @@ func (SERVER) Try(input string, result *string) error {
 	return nil
 }
 
-func (SERVER) StartClient(member db2.Member, result *db2.Equb) error {
+func (SERVER) StartClient(member db2.Member, result *Result) error {
 	db := db2.GetDatabase()
-	equb := db2.FindAllEqub(db)[0]
+	equb := db2.FindEqub(db)[0]
 	defer db.Close()
 
-	member.EqubID = equb.ID
-	member.CreateMember(db)
+	if equb.Status == "started" {
+		result = &Result{
+			Message: "Cannot Join This Equb",
+			Equb:    nil,
+		}
+	} else {
+		member.EqubID = equb.ID
+		member.CreateMember(db)
 
-	result = &db2.FindAllEqub(db)[0]
+		result = &Result{
+			Message: "Successfully Joined",
+			Equb:    db2.FindEqub(db)[0],
+		}
+		log.Println(member.Name + " connected")
+	}
 
 	return nil
 }

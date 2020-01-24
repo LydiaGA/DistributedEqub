@@ -3,9 +3,10 @@ package main
 import (
 	db2 "equb/db"
 	"fmt"
+	"time"
 )
 
-func main(){
+func main() {
 	//Serve()
 
 	db2.Migrate()
@@ -41,7 +42,7 @@ func main(){
 	var role int
 	_, _ = fmt.Scanf("%d", &role)
 
-	if role == 1{
+	if role == 1 {
 		fmt.Println("Enter the Name of the Equb")
 
 		var name string
@@ -52,13 +53,22 @@ func main(){
 		var month string
 		_, _ = fmt.Scanln(&month)
 
-		go StartServer(name, month)
+		fmt.Println("Enter 'start' to Start the Equb or 'exit' to Exit")
 
-		fmt.Println("Enter 'exit' to Exit")
+		time.Sleep(2 * time.Second)
+
+		go StartServer(name, month)
 
 		var command string
 		_, _ = fmt.Scanln(&command)
-	}else if role == 2{
+
+		if command == "start" {
+			StartEqub()
+		} else if command == "exit" {
+
+		}
+
+	} else if role == 2 {
 		fmt.Println("Enter Address of Server")
 
 		var address string
@@ -76,7 +86,6 @@ func main(){
 
 		StartClient(address, name, amount)
 
-
 		for true {
 			fmt.Println("What would you like to do?")
 			fmt.Println("(1) Make Payment")
@@ -89,24 +98,20 @@ func main(){
 			_, _ = fmt.Scanf("%d", &action)
 
 			switch action {
-				case 1:
-					fmt.Println(action)
-				case 2:
-					fmt.Println(action)
-				case 3:
-					fmt.Println(action)
-				case 4:
-					fmt.Println(action)
-				case 5:
-					fmt.Println(action)
+			case 1:
+				fmt.Println(action)
+			case 2:
+				fmt.Println(action)
+			case 3:
+				fmt.Println(action)
+			case 4:
+				fmt.Println(action)
+			case 5:
+				fmt.Println(action)
 			}
 		}
 
 		var command string
 		_, _ = fmt.Scanln(&command)
 	}
-
-	fmt.Println(role)
-
-	//fmt.Println(config.IP)
 }
