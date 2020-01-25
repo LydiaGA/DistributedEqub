@@ -10,7 +10,7 @@ type Equb struct {
 	gorm.Model
 
 	Name         string
-	CurrentMonth string
+	CurrentMonth int
 	Total        int
 	Members      []Member
 	Winner       Member

@@ -36,8 +36,6 @@ func StartClient(member db2.Member) db2.Equb {
 func GetEqub() db2.Equb {
 	client := GetClient()
 
-	fmt.Println(config.Me)
-
 	var result Result
 	err2 := client.Call("SERVER.GetEqub", config.Me, &result)
 	if err2 != nil {

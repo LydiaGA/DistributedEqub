@@ -6,7 +6,7 @@ import (
 	"equb2/DistributedEqub/rpc"
 )
 
-func StartServer(name string, month string) {
+func StartServer(name string, month int) {
 	db := db2.GetDatabase()
 	equb := db2.Equb{Name: name, CurrentMonth: month, Status: "created"}
 	equb.CreateEqub(db)
@@ -71,4 +71,20 @@ func CollectWinnings() string {
 	message, equb := rpc.CollectWinnings()
 	db2.UpdateEqub(db, equb)
 	return message
+}
+
+func ChangeMonth() string {
+	db := db2.GetDatabase()
+	equb := db2.FindEqub(db)[0]
+	defer db.Close()
+	equb.CurrentMonth = equb.CurrentMonth + 1
+	db.Save(&equb)
+
+	for _, member := range equb.Members {
+		memberFound := db2.FindMember(db, member.ID)
+		memberFound.HasPaid = false
+		db.Save(&memberFound)
+	}
+
+	return "Successfully Changed"
 }
