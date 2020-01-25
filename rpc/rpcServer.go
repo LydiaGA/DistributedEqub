@@ -72,3 +72,59 @@ func (SERVER) StartClient(member db2.Member, result *Result) error {
 
 	return nil
 }
+
+func (SERVER) GetEqub(member db2.Member, result *Result) error {
+	db := db2.GetDatabase()
+	equb := db2.FindEqub(db)[0]
+	defer db.Close()
+
+	equb.SetNextServer(db, member)
+
+	*result = Result{
+		Message: "Successfully Retrieved",
+		Equb:    equb,
+	}
+
+	return nil
+}
+
+func (SERVER) MakePayment(member db2.Member, result *Result) error {
+	db := db2.GetDatabase()
+	equb := db2.FindEqub(db)[0]
+	defer db.Close()
+
+	equb.Total = equb.Total + member.Amount
+	equb.SetNextServer(db, member)
+
+	*result = Result{
+		Message: "Successfully Retrieved",
+		Equb:    equb,
+	}
+
+	return nil
+}
+
+func (SERVER) CollectWinnings(member db2.Member, result *Result) error {
+	db := db2.GetDatabase()
+	equb := db2.FindEqub(db)[0]
+	defer db.Close()
+
+	if equb.Winner == member {
+		equb.Total = equb.Total - (12 * member.Amount)
+		equb.SetNextServer(db, member)
+
+		*result = Result{
+			Message: "Successfully Retrieved",
+			Equb:    equb,
+		}
+	} else {
+		equb.SetNextServer(db, member)
+
+		*result = Result{
+			Message: "You are not this month's winner",
+			Equb:    db2.Equb{},
+		}
+	}
+
+	return nil
+}
