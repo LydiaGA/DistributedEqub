@@ -1,6 +1,7 @@
 package config
 
 import (
+	"equb2/DistributedEqub/db"
 	"log"
 	"net"
 )
@@ -8,6 +9,7 @@ import (
 var Port = "8081"
 var IP = getIp().String()
 var ServerIP = getIp().String()
+var Me = db.Member{}
 
 func getIp() net.IP {
 	conn, err := net.Dial("udp", "8.8.8.8:80")

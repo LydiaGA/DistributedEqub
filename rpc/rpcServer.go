@@ -1,8 +1,8 @@
 package rpc
 
 import (
-	"equb1/DistributedEqub/config"
-	db2 "equb1/DistributedEqub/db"
+	"equb2/DistributedEqub/config"
+	db2 "equb2/DistributedEqub/db"
 	"log"
 	"net"
 	"net/http"

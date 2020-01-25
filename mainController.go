@@ -1,9 +1,9 @@
 package main
 
 import (
-	"equb1/DistributedEqub/config"
-	db2 "equb1/DistributedEqub/db"
-	"equb1/DistributedEqub/rpc"
+	"equb2/DistributedEqub/config"
+	db2 "equb2/DistributedEqub/db"
+	"equb2/DistributedEqub/rpc"
 )
 
 func StartServer(name string, month string) {
@@ -37,4 +37,38 @@ func StartClient(address string, name string, amount int) {
 
 	equb := rpc.StartClient(member)
 	equb.CreateEqub(db)
+
+	config.Me = db2.FindMember(db, equb.NextServerID)
+}
+
+func GetTotal() int {
+	db := db2.GetDatabase()
+	defer db.Close()
+	equb := rpc.GetEqub()
+	db2.UpdateEqub(db, equb)
+	return equb.Total
+}
+
+func GetList() []db2.Member {
+	db := db2.GetDatabase()
+	defer db.Close()
+	equb := rpc.GetEqub()
+	db2.UpdateEqub(db, equb)
+	return equb.Members
+}
+
+func MakePayment() string {
+	db := db2.GetDatabase()
+	defer db.Close()
+	message, equb := rpc.MakePayment()
+	db2.UpdateEqub(db, equb)
+	return message
+}
+
+func CollectWinnings() string {
+	db := db2.GetDatabase()
+	defer db.Close()
+	message, equb := rpc.CollectWinnings()
+	db2.UpdateEqub(db, equb)
+	return message
 }

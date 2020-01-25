@@ -11,6 +11,7 @@ type Equb struct {
 
 	Name         string
 	CurrentMonth string
+	Total        int
 	Members      []Member
 	Winner       Member
 	Status       string
@@ -37,7 +38,7 @@ func (model *Equb) CreateEqub(database *gorm.DB) {
 
 	for _, member := range model.Members {
 		memberFound := FindMember(database, member.ID)
-		if memberFound.ID != 0 {
+		if memberFound.ID == 0 {
 			database.Create(&member)
 		}
 
@@ -49,6 +50,28 @@ func FindEqub(database *gorm.DB) []Equb {
 	database.Preload("Members").First(&equbs)
 
 	return equbs
+}
+
+func UpdateEqub(database *gorm.DB, model Equb) {
+	equb := FindEqub(database)[0]
+
+	equb.Winner = model.Winner
+	equb.Total = model.Total
+	equb.Name = model.Name
+	equb.Status = model.Status
+	equb.CurrentMonth = model.CurrentMonth
+	equb.NextServerID = model.NextServerID
+
+	database.Save(&equb)
+
+	for _, member := range model.Members {
+		memberFound := FindMember(database, member.ID)
+		if memberFound.ID == 0 {
+			database.Create(&member)
+		} else {
+			memberFound.HasPaid = member.HasPaid
+		}
+	}
 }
 
 func (model *Equb) SetNextServer(database *gorm.DB, member Member) {

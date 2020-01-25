@@ -2,41 +2,17 @@ package main
 
 import (
 	"bufio"
-	db2 "equb1/DistributedEqub/db"
+	db2 "equb2/DistributedEqub/db"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
 
 func main() {
-	//Serve()
 
 	db2.Migrate()
-	//db := db2.GetDatabase()
-	//member1 := db2.Member{
-	//	Name:       "Member 1",
-	//	ServerTurn: 1,
-	//	HasPaid: false,
-	//	Amount: 2000,
-	//	IP: config.IP,
-	//}
-	//
-	//member2 := db2.Member{
-	//	Name:       "Member 2",
-	//	ServerTurn: 1,
-	//	HasPaid: false,
-	//	Amount: 1000,
-	//	IP: config.IP,
-	//}
-	//
-	//members := make([]db2.Member, 2)
-	//members[0] = member1
-	//members[1] = member2
-	//
-	//equb := db2.Equb{Name: "Equb 2", CurrentMonth: "January", Members: members}
-	//equb.CreateEqub(db)
-	//db.Close()
 
 	fmt.Println("Do you want to create a new equb or join an existing one?")
 	fmt.Println("(1) Create")
@@ -110,12 +86,20 @@ func main() {
 			switch action {
 			case 1:
 				fmt.Println(action)
+				fmt.Println(MakePayment())
 			case 2:
 				fmt.Println(action)
+				fmt.Println(CollectWinnings())
 			case 3:
 				fmt.Println(action)
+				total := GetTotal()
+				fmt.Println("Total: " + strconv.FormatInt(int64(total), 10))
 			case 4:
 				fmt.Println(action)
+				members := GetList()
+				for _, member := range members {
+					fmt.Println(member.Name + "\t" + strconv.FormatInt(int64(member.Amount), 10) + "\t" + strconv.FormatBool(member.HasPaid))
+				}
 			case 5:
 				fmt.Println(action)
 			}
