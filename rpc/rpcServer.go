@@ -94,6 +94,11 @@ func (SERVER) MakePayment(member db2.Member, result *Result) error {
 	defer db.Close()
 
 	equb.Total = equb.Total + member.Amount
+
+	memberFound := db2.FindMember(db, member.ID)
+	memberFound.HasPaid = true
+	db.Save(&memberFound)
+
 	equb.SetNextServer(db, member)
 
 	*result = Result{

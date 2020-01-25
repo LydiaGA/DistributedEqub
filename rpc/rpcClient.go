@@ -3,16 +3,29 @@ package rpc
 import (
 	"equb1/DistributedEqub/config"
 	db2 "equb1/DistributedEqub/db"
+	"fmt"
 	"log"
 	"net/rpc"
+	"time"
 )
 
 func GetClient() *rpc.Client {
 	client, err := rpc.DialHTTP("tcp", config.ServerIP+":"+config.Port)
-	if err != nil {
-		log.Fatal(err)
+	db := db2.GetDatabase()
+	equb := db2.FindEqub(db)[0]
+	defer db.Close()
+	for err != nil {
+		if equb.NextServerID == config.Me.ID {
+			Serve()
+		} else {
+			for _, member := range equb.Members {
+				time.Sleep(time.Second)
+				client, err = rpc.DialHTTP("tcp", member.IP+":"+config.Port)
+				fmt.Print("In GetClient: ")
+				log.Println(err)
+			}
+		}
 	}
-
 	return client
 }
 
