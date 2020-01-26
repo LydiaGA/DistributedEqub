@@ -6,7 +6,8 @@ import (
 	"net"
 )
 
-var Port = "8081"
+var ServerPort = "8081"
+var ClientPort = "8082"
 var IP = getIp().String()
 var ServerIP = getIp().String()
 var Me = db.Member{}

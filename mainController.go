@@ -33,6 +33,7 @@ func StartClient(address string, name string, amount int) {
 		HasPaid: false,
 		Amount:  amount,
 		IP:      config.IP,
+		Port:    config.ClientPort,
 	}
 
 	equb := rpc.StartClient(member)
