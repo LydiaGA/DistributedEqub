@@ -28,6 +28,9 @@ func StartClient(address string, name string, amount int) {
 	db := db2.GetDatabase()
 	defer db.Close()
 
+	equb := db2.Equb{Name: "", CurrentMonth: 0, Status: ""}
+	equb.CreateEqub(db)
+
 	member := db2.Member{
 		Name:    name,
 		HasPaid: false,
@@ -36,8 +39,9 @@ func StartClient(address string, name string, amount int) {
 		Port:    config.ClientPort,
 	}
 
-	equb := rpc.StartClient(member)
-	equb.CreateEqub(db)
+	rpc.StartClient(member)
+	equb = rpc.StartClient(member)
+	//equb.CreateEqub(db)
 
 	config.Me = db2.FindMember(db, equb.NextServerID)
 }
@@ -46,7 +50,7 @@ func GetTotal() int {
 	db := db2.GetDatabase()
 	defer db.Close()
 	equb := rpc.GetEqub()
-	db2.UpdateEqub(db, equb)
+	//db2.UpdateEqub(db, equb)
 	return equb.Total
 }
 
@@ -54,23 +58,23 @@ func GetList() []db2.Member {
 	db := db2.GetDatabase()
 	defer db.Close()
 	equb := rpc.GetEqub()
-	db2.UpdateEqub(db, equb)
+	//db2.UpdateEqub(db, equb)
 	return equb.Members
 }
 
 func MakePayment() string {
 	db := db2.GetDatabase()
 	defer db.Close()
-	message, equb := rpc.MakePayment()
-	db2.UpdateEqub(db, equb)
+	message, _ := rpc.MakePayment()
+	//db2.UpdateEqub(db, equb)
 	return message
 }
 
 func CollectWinnings() string {
 	db := db2.GetDatabase()
 	defer db.Close()
-	message, equb := rpc.CollectWinnings()
-	db2.UpdateEqub(db, equb)
+	message, _ := rpc.CollectWinnings()
+	//db2.UpdateEqub(db, equb)
 	return message
 }
 
@@ -86,6 +90,9 @@ func ChangeMonth() string {
 		memberFound.HasPaid = false
 		db.Save(&memberFound)
 	}
+
+	equb = db2.FindEqub(db)[0]
+	rpc.NotifyAll(equb.Members, equb)
 
 	return "Successfully Changed"
 }
