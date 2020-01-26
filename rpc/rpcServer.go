@@ -17,7 +17,7 @@ type Result struct {
 }
 
 func Serve() {
-	serverPort := config.Port
+	serverPort := config.ServerPort
 
 	server := new(SERVER)
 	err := rpc.Register(server)
@@ -38,12 +38,6 @@ func Serve() {
 	if err != nil {
 		log.Fatal("Error Serving: ", err)
 	}
-}
-
-func (SERVER) Try(input string, result *string) error {
-	*result = input + "received"
-
-	return nil
 }
 
 func (SERVER) StartClient(member db2.Member, result *Result) error {
@@ -70,6 +64,7 @@ func (SERVER) StartClient(member db2.Member, result *Result) error {
 		log.Println(member.Name + " connected")
 	}
 
+	NotifyAll(equb.Members, equb)
 	return nil
 }
 
@@ -85,6 +80,7 @@ func (SERVER) GetEqub(member db2.Member, result *Result) error {
 		Equb:    equb,
 	}
 
+	NotifyAll(equb.Members, equb)
 	return nil
 }
 
@@ -105,7 +101,7 @@ func (SERVER) MakePayment(member db2.Member, result *Result) error {
 		Message: "Successfully Retrieved",
 		Equb:    equb,
 	}
-
+	NotifyAll(equb.Members, equb)
 	return nil
 }
 
@@ -130,6 +126,21 @@ func (SERVER) CollectWinnings(member db2.Member, result *Result) error {
 			Equb:    db2.Equb{},
 		}
 	}
-
+	NotifyAll(equb.Members, equb)
 	return nil
+}
+
+func NotifyAll(members []db2.Member, equb db2.Equb) {
+	for _, member := range members {
+		client, err := rpc.DialHTTP("tcp", member.IP+":"+member.Port)
+		if err != nil {
+			log.Println(err)
+		}
+
+		var result Result
+		err2 := client.Call("CLIENT.Notify", equb, &result)
+		if err2 != nil {
+			log.Println(err2)
+		}
+	}
 }

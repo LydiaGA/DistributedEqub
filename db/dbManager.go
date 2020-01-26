@@ -28,7 +28,8 @@ type Member struct {
 	HasPaid bool
 	Amount  int
 
-	IP string
+	IP   string
+	Port string
 }
 
 func (model *Equb) CreateEqub(database *gorm.DB) {
