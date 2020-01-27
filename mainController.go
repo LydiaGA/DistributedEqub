@@ -6,14 +6,24 @@ import (
 	"equb2/DistributedEqub/rpc"
 )
 
-func StartServer(name string, month int) {
+func StartServer(name string, month int, port string, memberName string, amount int) {
 	db := db2.GetDatabase()
 	equb := db2.Equb{Name: name, CurrentMonth: month, Status: "created"}
 	equb.CreateEqub(db)
 
+	member := db2.Member{
+		Name:    memberName,
+		HasPaid: false,
+		Amount:  amount,
+		IP:      config.IP,
+		Port:    port,
+	}
+
+	member.CreateMember(db, equb)
+
 	defer db.Close()
 
-	rpc.Serve()
+	rpc.Serve(port)
 }
 
 func StartEqub() {
@@ -23,13 +33,14 @@ func StartEqub() {
 	db.Save(&equb)
 }
 
-func StartClient(address string, port string, name string, amount int) {
+func StartClient(address string, serverPort string, port string, name string, amount int) {
 	config.ServerIP = address
+	config.ServerPort = serverPort
 	db := db2.GetDatabase()
 	defer db.Close()
 
 	config.ClientPort = port
-	go rpc.ClientServe()
+	go rpc.Serve(port)
 	fmt.Println("After Serve")
 	equb := db2.Equb{Name: "", CurrentMonth: 0, Status: ""}
 	equb.CreateEqub(db)

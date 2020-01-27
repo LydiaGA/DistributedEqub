@@ -35,9 +35,26 @@ func main() {
 		var month int
 		_, _ = fmt.Scanf("%d", &month)
 
+		fmt.Println("Enter a Port Number for your Server")
+
+		var port string
+		port, _ = in.ReadString('\n')
+		port = strings.TrimSuffix(port, "\n")
+
+		fmt.Println("Enter your name")
+
+		var memberName string
+		memberName, _ = in.ReadString('\n')
+		memberName = strings.TrimSuffix(memberName, "\n")
+
+		fmt.Println("Enter the Amount you are Going to Pay")
+
+		var amount int
+		_, _ = fmt.Scanf("%d", &amount)
+
 		time.Sleep(2 * time.Second)
 
-		go StartServer(name, month)
+		go StartServer(name, month, port, memberName, amount)
 
 		for true {
 			fmt.Println("What would you like to do?")
@@ -93,6 +110,12 @@ func main() {
 		address, _ = in.ReadString('\n')
 		address = strings.TrimSuffix(address, "\n")
 
+		fmt.Println("Enter Port of Server")
+
+		var serverPort string
+		serverPort, _ = in.ReadString('\n')
+		serverPort = strings.TrimSuffix(serverPort, "\n")
+
 		fmt.Println("Enter a Port Number for your Server")
 
 		var port string
@@ -110,7 +133,7 @@ func main() {
 		var amount int
 		_, _ = fmt.Scanf("%d", &amount)
 
-		StartClient(address, port, name, amount)
+		StartClient(address, serverPort, port, name, amount)
 
 		for true {
 			fmt.Println("What would you like to do?")

@@ -5,37 +5,35 @@ import (
 	db2 "equb2/DistributedEqub/db"
 	"fmt"
 	"log"
-	"net"
-	"net/http"
 	"net/rpc"
 	"time"
 )
 
 type CLIENT int
 
-func ClientServe() {
-	serverPort := config.ClientPort
-
-	server := new(CLIENT)
-	err := rpc.Register(server)
-	if err != nil {
-		log.Fatal("Error Registering RPC", err)
-	}
-
-	rpc.HandleHTTP()
-
-	listener, err := net.Listen("tcp", ":"+serverPort)
-
-	if err != nil {
-		log.Fatal("Listener Error", err)
-	}
-	log.Printf("Serving RPC on port \"%s\"", serverPort)
-	err = http.Serve(listener, nil)
-
-	if err != nil {
-		log.Fatal("Error Serving: ", err)
-	}
-}
+//func ClientServe() {
+//	serverPort := config.ClientPort
+//
+//	server := new(CLIENT)
+//	err := rpc.Register(server)
+//	if err != nil {
+//		log.Fatal("Error Registering RPC", err)
+//	}
+//
+//	rpc.HandleHTTP()
+//
+//	listener, err := net.Listen("tcp", ":"+serverPort)
+//
+//	if err != nil {
+//		log.Fatal("Listener Error", err)
+//	}
+//	log.Printf("Serving RPC on port \"%s\"", serverPort)
+//	err = http.Serve(listener, nil)
+//
+//	if err != nil {
+//		log.Fatal("Error Serving: ", err)
+//	}
+//}
 
 func GetClient() *rpc.Client {
 	client, err := rpc.DialHTTP("tcp", config.ServerIP+":"+config.ServerPort)
@@ -44,7 +42,7 @@ func GetClient() *rpc.Client {
 	defer db.Close()
 	for err != nil {
 		if equb.NextServerID == config.Me.ID {
-			Serve()
+			//tell clients
 		} else {
 			for _, member := range equb.Members {
 				time.Sleep(time.Second)
@@ -116,7 +114,7 @@ func CollectWinnings() (string, db2.Equb) {
 
 }
 
-func (CLIENT) Notify(equb db2.Equb, result *string) error {
+func (SERVER) Notify(equb db2.Equb, result *string) error {
 	db := db2.GetDatabase()
 	defer db.Close()
 	db2.UpdateEqub(db, equb)
