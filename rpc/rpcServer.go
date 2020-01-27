@@ -1,7 +1,6 @@
 package rpc
 
 import (
-	"equb1/DistributedEqub/config"
 	db2 "equb1/DistributedEqub/db"
 	"log"
 	"net"
@@ -16,9 +15,7 @@ type Result struct {
 	Equb    db2.Equb
 }
 
-func Serve() {
-	serverPort := config.ServerPort
-
+func Serve(port string) {
 	server := new(SERVER)
 	err := rpc.Register(server)
 	if err != nil {
@@ -27,12 +24,12 @@ func Serve() {
 
 	rpc.HandleHTTP()
 
-	listener, err := net.Listen("tcp", ":"+serverPort)
+	listener, err := net.Listen("tcp", ":"+port)
 
 	if err != nil {
 		log.Fatal("Listener Error", err)
 	}
-	log.Printf("Serving RPC on port \"%s\"", serverPort)
+	log.Printf("Serving RPC on port \"%s\"", port)
 	err = http.Serve(listener, nil)
 
 	if err != nil {
@@ -137,8 +134,8 @@ func NotifyAll(members []db2.Member, equb db2.Equb) {
 			log.Println(err)
 		}
 
-		var result Result
-		err2 := client.Call("CLIENT.Notify", equb, &result)
+		var result string
+		err2 := client.Call("SERVER.Notify", equb, &result)
 		if err2 != nil {
 			log.Println(err2)
 		}
