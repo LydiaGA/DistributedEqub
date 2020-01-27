@@ -23,11 +23,14 @@ func StartEqub() {
 	db.Save(&equb)
 }
 
-func StartClient(address string, name string, amount int) {
+func StartClient(address string, port string, name string, amount int) {
 	config.ServerIP = address
 	db := db2.GetDatabase()
 	defer db.Close()
 
+	config.ClientPort = port
+	go rpc.ClientServe()
+	fmt.Println("After Serve")
 	equb := db2.Equb{Name: "", CurrentMonth: 0, Status: ""}
 	equb.CreateEqub(db)
 
@@ -39,7 +42,7 @@ func StartClient(address string, name string, amount int) {
 		Port:    config.ClientPort,
 	}
 
-	rpc.StartClient(member)
+	//rpc.StartClient(member)
 	equb = rpc.StartClient(member)
 	//equb.CreateEqub(db)
 
