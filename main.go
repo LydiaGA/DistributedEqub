@@ -91,7 +91,13 @@ func main() {
 		var address string
 		address, _ = in.ReadString('\n')
 		address = strings.TrimSuffix(address, "\n")
-		//port
+
+		fmt.Println("Enter a Port Number for your Server")
+
+		var port string
+		port, _ = in.ReadString('\n')
+		port = strings.TrimSuffix(port, "\n")
+
 		fmt.Println("Enter your name")
 
 		var name string
@@ -103,7 +109,7 @@ func main() {
 		var amount int
 		_, _ = fmt.Scanf("%d", &amount)
 
-		StartClient(address, name, amount)
+		StartClient(address, port, name, amount)
 
 		for true {
 			fmt.Println("What would you like to do?")
