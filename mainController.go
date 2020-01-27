@@ -9,7 +9,7 @@ import (
 
 func StartServer(name string, month int, port string, memberName string, amount int) {
 	db := db2.GetDatabase()
-	equb := db2.Equb{Name: name, CurrentMonth: month, Status: "created"}
+	equb := db2.Equb{Name: name, CurrentMonth: month, Status: "created", NextServerID: 2}
 	equb.CreateEqub(db)
 
 	member := db2.Member{

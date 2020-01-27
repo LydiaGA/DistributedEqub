@@ -52,7 +52,7 @@ func (SERVER) StartClient(member db2.Member, result *Result) error {
 		member.CreateMember(db, equb)
 
 		equb = db2.FindEqub(db)[0]
-		equb.SetNextServer(db, member)
+		//equb.SetNextServer(db, member)
 
 		*result = Result{
 			Message: "Successfully Joined",
@@ -70,7 +70,7 @@ func (SERVER) GetEqub(member db2.Member, result *Result) error {
 	equb := db2.FindEqub(db)[0]
 	defer db.Close()
 
-	equb.SetNextServer(db, member)
+	//equb.SetNextServer(db, member)
 
 	*result = Result{
 		Message: "Successfully Retrieved",
@@ -92,7 +92,8 @@ func (SERVER) MakePayment(member db2.Member, result *Result) error {
 	memberFound.HasPaid = true
 	db.Save(&memberFound)
 
-	equb.SetNextServer(db, member)
+	db.Save(&equb)
+	//equb.SetNextServer(db, member)
 
 	*result = Result{
 		Message: "Successfully Retrieved",
@@ -109,14 +110,15 @@ func (SERVER) CollectWinnings(member db2.Member, result *Result) error {
 
 	if equb.Winner == member {
 		equb.Total = equb.Total - (12 * member.Amount)
-		equb.SetNextServer(db, member)
+		db.Save(&equb)
+		//equb.SetNextServer(db, member)
 
 		*result = Result{
 			Message: "Successfully Retrieved",
 			Equb:    equb,
 		}
 	} else {
-		equb.SetNextServer(db, member)
+		//equb.SetNextServer(db, member)
 
 		*result = Result{
 			Message: "You are not this month's winner",

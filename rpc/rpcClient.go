@@ -6,10 +6,15 @@ import (
 	"fmt"
 	"log"
 	"net/rpc"
-	"time"
 )
 
-type CLIENT int
+//type CLIENT int
+
+type ChangeServerInput struct {
+	IP   string
+	Port string
+	ID   uint
+}
 
 //func ClientServe() {
 //	serverPort := config.ClientPort
@@ -35,19 +40,55 @@ type CLIENT int
 //	}
 //}
 
+//func GetClient() *rpc.Client {
+//	client, err := rpc.DialHTTP("tcp", config.ServerIP+":"+config.ServerPort)
+//	db := db2.GetDatabase()
+//	equb := db2.FindEqub(db)[0]
+//	defer db.Close()
+//	for err != nil {
+//		if equb.NextServerID == config.Me.ID {
+//			//tell clients
+//		} else {
+//			for _, member := range equb.Members {
+//				time.Sleep(time.Second)
+//				client, err = rpc.DialHTTP("tcp", member.IP+":"+config.ServerPort)
+//				fmt.Print("In GetClient: ")
+//				log.Println(err)
+//			}
+//		}
+//	}
+//	return client
+//}
+
 func GetClient() *rpc.Client {
 	client, err := rpc.DialHTTP("tcp", config.ServerIP+":"+config.ServerPort)
 	db := db2.GetDatabase()
 	equb := db2.FindEqub(db)[0]
 	defer db.Close()
-	for err != nil {
+	if err != nil {
 		if equb.NextServerID == config.Me.ID {
-			//tell clients
-		} else {
+			input := ChangeServerInput{
+				IP:   config.IP,
+				Port: config.ClientPort,
+				ID:   config.Me.ID,
+			}
 			for _, member := range equb.Members {
-				time.Sleep(time.Second)
-				client, err = rpc.DialHTTP("tcp", member.IP+":"+config.ServerPort)
+				client, err = rpc.DialHTTP("tcp", member.IP+":"+member.Port)
+				if err != nil {
+					log.Println(err)
+				} else {
+					var result Result
+					err2 := client.Call("SERVER.ChangeServer", input, &result)
+					if err2 != nil {
+						log.Println(err2)
+					}
+				}
 				fmt.Print("In GetClient: ")
+				log.Println(err)
+			}
+		} else {
+			client, err = rpc.DialHTTP("tcp", config.ServerIP+":"+config.ServerPort)
+			if err != nil {
 				log.Println(err)
 			}
 		}
@@ -119,5 +160,12 @@ func (SERVER) Notify(equb db2.Equb, result *string) error {
 	defer db.Close()
 	db2.UpdateEqub(db, equb)
 	*result = "Successfully Updated"
+	return nil
+}
+
+func (SERVER) ChangeServer(input ChangeServerInput, result *string) error {
+	config.ServerIP = input.IP
+	config.ServerPort = input.Port
+	*result = "Successfully Changed"
 	return nil
 }
