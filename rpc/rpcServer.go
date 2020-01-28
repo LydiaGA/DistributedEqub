@@ -1,8 +1,8 @@
 package rpc
 
 import (
-	"equb2/DistributedEqub/config"
 	db2 "equb2/DistributedEqub/db"
+	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -92,8 +92,13 @@ func (SERVER) MakePayment(member db2.Member, result *Result) error {
 	memberFound := db2.FindMember(db, member.ID)
 	memberFound.HasPaid = true
 	db.Save(&memberFound)
-
 	db.Save(&equb)
+
+	memberFound2 := db2.FindMember(db, member.ID)
+	fmt.Println(memberFound2.HasPaid)
+
+	equb = db2.FindEqub(db)[0]
+
 	//equb.SetNextServer(db, member)
 
 	*result = Result{

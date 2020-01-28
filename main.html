@@ -14,8 +14,8 @@
 <body style="background-color: ghostwhite;">
 <div class="container table-responsive" style="margin-top: 40px;">
 
-    <h1 style="color: #6585A1">Ekub Name</h1>
-    <h3>Total : 1000</h3>
+    <h1 style="color: #6585A1">{{.Equb.Name}}</h1>
+    <h3>Total : {{.Equb.Total}}</h3>
     <br>
     <div class="row">
         <div class="col-9">
@@ -28,27 +28,29 @@
                 </tr>
 
                 <tr>
-                    <th style="color: #6585A1">September</th>
+                    <th style="color: #6585A1">{{.Month}}
+                        {{if eq .Me.ID .ServerId}}
+                            <a style="float: right; font-weight: 200" href="/change"><u>Change Month</u></a>
+                        {{end}}
+                    </th>
 
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Jill</td>
-                    <td>paid</td>
-
-                </tr>
-                <tr>
-                    <td>Jill</td>
-                    <td>paid</td>
-
-                </tr>
-
-                <tr>
-                    <td>John</td>
-                    <td>paid</td>
-
-                </tr>
+                {{range .Equb.Members}}
+                    <tr>
+                        <td>{{.Name}}</td>
+                        {{if .HasPaid}}
+                            <td>Paid</td>
+                        {{else}}
+                            {{if eq .ID $.Me.ID}}
+                                <td>Not Paid <a style="float: right; font-weight: 200" href="/pay"><u>Pay</u></a></td>
+                            {{else}}
+                                <td>Not Paid </td>
+                            {{end}}
+                        {{end}}
+                    </tr>
+                {{end}}
                 </tbody>
             </table>
         </div>
