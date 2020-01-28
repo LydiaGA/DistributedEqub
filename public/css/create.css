@@ -1,0 +1,20 @@
+.container {
+    margin-top: 50px;
+}
+
+.header-style {
+
+    margin-bottom: 20px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.createForm {
+    max-width: 400px;
+
+}
+
+.btn {
+    color: white;
+    background-color: rgb(101, 133, 161);
+
+}

@@ -1,0 +1,78 @@
+body {
+    background-color: aliceblue;
+}
+
+.header_text {
+    color: white;
+    text-align: left
+}
+
+.container.container_body {
+    margin-top: 8%;
+}
+
+.container.container_body_signup {
+    margin-top: 4%;
+}
+
+.container.search {
+    margin-top: 4%;
+}
+
+
+.card.card_body {
+    max-width: 500px;
+    margin: auto;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    background-color: ghostwhite;
+}
+
+.card.card_body_signup {
+    max-width: 600px;
+    max-height: 600px;
+    margin: auto;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    background-color: ghostwhite;
+}
+
+.btn {
+    width: 100%;
+    color: white;
+    background-color: rgb(101, 133, 161);
+}
+
+p.text_style {
+    margin-top: 1%;
+}
+
+h5.head_style {
+    font-weight: 100;
+    font: outline;
+}
+
+form.input-forms {
+    max-width: 400px;
+    margin: auto;
+
+}
+
+.form-group.space {
+    margin-top: 8px;
+}
+
+.card-header.header_color {
+    background-color: rgb(101, 133, 161);
+}
+
+.statusinfo {
+    width: 72%;
+    padding: 8px;
+    color: white;
+    background-color: brown;
+    margin: auto;
+    border-radius: 6px;
+}
