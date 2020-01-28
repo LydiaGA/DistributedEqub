@@ -90,8 +90,8 @@ func (SERVER) MakePayment(member db2.Member, result *Result) error {
 	equb.Total = equb.Total + member.Amount
 
 	memberFound := db2.FindMember(db, member.ID)
-	memberFound.HasPaid = true
-	db.Save(&memberFound)
+	db.Model(&memberFound).Update("HasPaid", true)
+
 	db.Save(&equb)
 
 	memberFound2 := db2.FindMember(db, member.ID)
