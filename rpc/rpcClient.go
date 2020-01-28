@@ -77,7 +77,7 @@ func GetClient() *rpc.Client {
 				if err != nil {
 					log.Println(err)
 				} else {
-					var result Result
+					var result string
 					err2 := client.Call("SERVER.ChangeServer", input, &result)
 					if err2 != nil {
 						log.Println(err2)
