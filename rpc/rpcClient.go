@@ -73,18 +73,20 @@ func GetClient() *rpc.Client {
 				ID:   config.Me.ID,
 			}
 			for _, member := range equb.Members {
+				if member.ID == config.Me.ID {
+					continue
+				}
 				client, err = rpc.DialHTTP("tcp", member.IP+":"+member.Port)
 				if err != nil {
 					log.Println(err)
 				} else {
-					var result Result
+					var result string
 					err2 := client.Call("SERVER.ChangeServer", input, &result)
 					if err2 != nil {
 						log.Println(err2)
 					}
 				}
 				fmt.Print("In GetClient: ")
-				log.Println(err)
 			}
 		} else {
 			client, err = rpc.DialHTTP("tcp", config.ServerIP+":"+config.ServerPort)

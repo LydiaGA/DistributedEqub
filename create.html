@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale = 1, shrink-to-fit no">
+    <link rel="stylesheet" href="/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="/css/site.css">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <title>Create Equb</title>
+</head>
+<body style="background-color: ghostwhite;">
+<div class="container text-center container_body" id="login_body">
+    <div class="card card_body">
+
+        <div class="card-header header_color header_text">
+            <h3 class="head_style">{{.Title}}</h3>
+        </div>
+        <div class="card-body">
+            <form class="input-forms" method="POST" action="/create">
+                <div class="form-group space">
+                    <div>
+                        <input class="form-control" type="text" id="equbname" name="equbname" placeholder="Equb Name">
+                    </div>
+                </div>
+
+                <div class="form-group space">
+                    <div>
+                        <select name="month" id="month" class="custom-select">
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group space">
+                    <div>
+                        <input class="form-control" type="text" id="myPort" name="myPort" placeholder="Your Port Number">
+                    </div>
+                </div>
+                <div class="form-group space">
+                    <div>
+                        <input class="form-control" type="text" id="name" name="name" placeholder="Your Name">
+                    </div>
+                </div>
+                <div class="form-group space">
+                    <div>
+                        <input class="form-control" type="text" id="amount" name="amount" placeholder="Amount to Pay">
+                    </div>
+                </div>
+                <div class="form-group space">
+                    <div>
+                        <input type="submit" class="btn " id="verify" value="Create">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<br>
+
+</body>
+</html>

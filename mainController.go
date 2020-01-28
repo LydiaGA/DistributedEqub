@@ -57,7 +57,7 @@ func StartClient(address string, serverPort string, port string, name string, am
 	equb = rpc.StartClient(member)
 	//equb.CreateEqub(db)
 
-	config.Me = db2.FindMember(db, equb.NextServerID)
+	config.Me = db2.FindMember(db, equb.Members[len(equb.Members)-1].ID)
 }
 
 func GetTotal() int {

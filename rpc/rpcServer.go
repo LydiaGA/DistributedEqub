@@ -135,6 +135,7 @@ func NotifyAll(members []db2.Member, equb db2.Equb) {
 		client, err := rpc.DialHTTP("tcp", member.IP+":"+member.Port)
 		if err != nil {
 			log.Println(err)
+			continue
 		}
 
 		var result string
