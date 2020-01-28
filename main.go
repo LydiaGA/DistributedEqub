@@ -37,12 +37,13 @@ func JoinHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		serverIp := r.FormValue("equbname")
-		serverPort := r.FormValue("month")
+		serverIp := r.FormValue("serverIp")
+		serverPort := r.FormValue("serverPort")
 		port := r.FormValue("myPort")
 		name := r.FormValue("name")
 		amount, err := strconv.Atoi(r.FormValue("amount"))
 		StartClient(serverIp, serverPort, port, name, amount)
+		http.Redirect(w, r, "/main", http.StatusSeeOther)
 	}
 }
 
@@ -71,6 +72,7 @@ func CreateHandler(w http.ResponseWriter, r *http.Request) {
 		name := r.FormValue("name")
 		amount, err := strconv.Atoi(r.FormValue("amount"))
 		go StartServer(equbName, month, port, name, amount)
+		http.Redirect(w, r, "/main", http.StatusSeeOther)
 	}
 }
 

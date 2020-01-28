@@ -2,6 +2,7 @@ package rpc
 
 import (
 	db2 "equb1/DistributedEqub/db"
+	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -89,11 +90,13 @@ func (SERVER) MakePayment(member db2.Member, result *Result) error {
 	equb.Total = equb.Total + member.Amount
 
 	memberFound := db2.FindMember(db, member.ID)
-	memberFound.HasPaid = true
-	db.Save(&memberFound)
+	db.Model(&memberFound).Update("HasPaid", true)
 
 	db.Save(&equb)
 	//equb.SetNextServer(db, member)
+
+	memberFound2 := db2.FindMember(db, member.ID)
+	fmt.Println(memberFound2.HasPaid)
 
 	*result = Result{
 		Message: "Successfully Retrieved",
