@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	db2 "equb2/DistributedEqub/db"
+	db2 "equb1/DistributedEqub/db"
 	"fmt"
 	"log"
 	"net"
@@ -55,6 +55,28 @@ func (SERVER) StartClient(member db2.Member, result *Result) error {
 		equb = db2.FindEqub(db)[0]
 		//equb.SetNextServer(db, member)
 
+		*result = Result{
+			Message: "Successfully Joined",
+			Equb:    equb,
+		}
+		log.Println(member.Name + " connected")
+	}
+
+	NotifyAll(equb.Members, equb)
+	return nil
+}
+
+func (SERVER) ResumeClient(member db2.Member, result *Result) error {
+	db := db2.GetDatabase()
+	equb := db2.FindEqub(db)[0]
+	defer db.Close()
+
+	if equb.Status == "started" {
+		*result = Result{
+			Message: "Cannot Join This Equb",
+			Equb:    db2.Equb{},
+		}
+	} else {
 		*result = Result{
 			Message: "Successfully Joined",
 			Equb:    equb,

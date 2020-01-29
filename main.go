@@ -1,8 +1,8 @@
 package main
 
 import (
-	"equb2/DistributedEqub/config"
-	db2 "equb2/DistributedEqub/db"
+	"equb1/DistributedEqub/config"
+	db2 "equb1/DistributedEqub/db"
 	"fmt"
 	"html/template"
 	"strconv"
@@ -17,7 +17,35 @@ type Data struct {
 	Equb     db2.Equb
 	Month    string
 	Me       db2.Member
+	MyId     uint
 	ServerId uint
+}
+
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+	db2.Migrate()
+	db := db2.GetDatabase()
+	defer db.Close()
+	myId := uint(0)
+	if len(db2.FindMe(db)) != 0 {
+		myId = db2.FindMe(db)[0].MyId
+	}
+
+	if r.Method == "GET" {
+		tmpl, err := template.ParseFiles("index.html")
+		if err != nil {
+			fmt.Println(err)
+		}
+		data := Data{
+			MyId: myId,
+		}
+		fmt.Println(config.Me.ID)
+		err2 := tmpl.Execute(w, data)
+		if err2 != nil {
+			fmt.Println(err2)
+		}
+	} else if r.Method == "POST" {
+		r.ParseForm()
+	}
 }
 
 func MainHandler(w http.ResponseWriter, r *http.Request) {
@@ -88,6 +116,23 @@ func CreateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func ResumeHandler(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == "GET" {
+		var body, _ = LoadFile("resume.html")
+		fmt.Fprintf(w, body)
+	} else if r.Method == "POST" {
+		err := r.ParseForm()
+		if err != nil {
+			fmt.Println(err)
+		}
+		serverIp := r.FormValue("serverIp")
+		serverPort := r.FormValue("serverPort")
+		Resume(serverIp, serverPort)
+		http.Redirect(w, r, "/main", http.StatusSeeOther)
+	}
+}
+
 func PayHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		MakePayment()
@@ -119,12 +164,14 @@ func LoadFile(filename string) (string, error) {
 func main() {
 	db2.Migrate()
 	http.Handle("/", http.FileServer(http.Dir("public")))
+	http.HandleFunc("/index", IndexHandler)
 	http.HandleFunc("/main", MainHandler)
 	http.HandleFunc("/create", CreateHandler)
 	http.HandleFunc("/join", JoinHandler)
+	http.HandleFunc("/resume", ResumeHandler)
 	http.HandleFunc("/pay", PayHandler)
 	http.HandleFunc("/change", ChangeMonthHandler)
-	err := http.ListenAndServe(":8001", nil)
+	err := http.ListenAndServe(":8000", nil)
 	if err != nil {
 		fmt.Println(err)
 	}

@@ -32,6 +32,11 @@ type Member struct {
 	Port string
 }
 
+type Me struct {
+	gorm.Model
+	MyId uint
+}
+
 func (model *Equb) CreateEqub(database *gorm.DB) {
 	if len(FindEqub(database)) == 0 {
 		database.Create(model)
@@ -80,6 +85,21 @@ func (model *Equb) SetNextServer(database *gorm.DB, member Member) {
 	database.Save(&model)
 }
 
+func SaveMe(database *gorm.DB, member Member) {
+	me := Me{
+		MyId: member.ID,
+	}
+	if len(FindMe(database)) == 0 {
+		database.Create(&me)
+	}
+}
+
+func FindMe(database *gorm.DB) []Me {
+	me := []Me{}
+	database.First(&me)
+	return me
+}
+
 func (model *Member) CreateMember(database *gorm.DB, equb Equb) {
 	model.EqubID = equb.ID
 	database.Create(model)
@@ -103,6 +123,6 @@ func GetDatabase() *gorm.DB {
 
 func Migrate() {
 	db := GetDatabase()
-	db.AutoMigrate(&Equb{}, &Member{})
+	db.AutoMigrate(&Equb{}, &Member{}, &Me{})
 	db.Close()
 }

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"equb2/DistributedEqub/db"
+	"equb1/DistributedEqub/db"
 	"log"
 	"net"
 )

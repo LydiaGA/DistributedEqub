@@ -1,8 +1,8 @@
 package rpc
 
 import (
-	"equb2/DistributedEqub/config"
-	db2 "equb2/DistributedEqub/db"
+	"equb1/DistributedEqub/config"
+	db2 "equb1/DistributedEqub/db"
 	"fmt"
 	"log"
 	"net/rpc"
@@ -103,6 +103,22 @@ func StartClient(member db2.Member) db2.Equb {
 
 	var result Result
 	err2 := client.Call("SERVER.StartClient", member, &result)
+	if err2 != nil {
+		log.Println(err2)
+	}
+
+	if result.Equb.Name == "" {
+		log.Fatal(result.Message)
+	}
+
+	return result.Equb
+}
+
+func ResumeClient(member db2.Member) db2.Equb {
+	client := GetClient()
+
+	var result Result
+	err2 := client.Call("SERVER.ResumeClient", member, &result)
 	if err2 != nil {
 		log.Println(err2)
 	}

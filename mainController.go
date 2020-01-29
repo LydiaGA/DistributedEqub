@@ -1,9 +1,9 @@
 package main
 
 import (
-	"equb2/DistributedEqub/config"
-	db2 "equb2/DistributedEqub/db"
-	"equb2/DistributedEqub/rpc"
+	"equb1/DistributedEqub/config"
+	db2 "equb1/DistributedEqub/db"
+	"equb1/DistributedEqub/rpc"
 )
 
 func StartServer(name string, month int, port string, memberName string, amount int) {
@@ -20,6 +20,9 @@ func StartServer(name string, month int, port string, memberName string, amount 
 	}
 
 	member.CreateMember(db, equb)
+	equb = db2.FindEqub(db)[0]
+	config.Me = db2.FindMember(db, equb.Members[len(equb.Members)-1].ID)
+	db2.SaveMe(db, config.Me)
 
 	defer db.Close()
 
@@ -57,6 +60,23 @@ func StartClient(address string, serverPort string, port string, name string, am
 	//equb.CreateEqub(db)
 
 	config.Me = db2.FindMember(db, equb.Members[len(equb.Members)-1].ID)
+	db2.SaveMe(db, config.Me)
+}
+
+func Resume(address string, serverPort string) {
+	config.ServerIP = address
+	config.ServerPort = serverPort
+	db := db2.GetDatabase()
+	defer db.Close()
+
+	myId := db2.FindMe(db)[0].MyId
+	me := db2.FindMember(db, myId)
+
+	config.ClientPort = me.Port
+	go rpc.Serve(me.Port)
+
+	equb := rpc.ResumeClient(me)
+	db2.UpdateEqub(db, equb)
 }
 
 func GetEqub() db2.Equb {

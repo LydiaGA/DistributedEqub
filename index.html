@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Equb</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale = 1, shrink-to-fit no">
+
+    <link rel="stylesheet" href="/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="/css/site.css">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="background-color: ghostwhite;">
+<div class="container text-center container_body pt-3 px-5" id="login_body">
+    <h1 style="font-size: 600%" class="pb-3">EQUB</h1>
+    {{if eq .MyId 0}}
+        <div class="row my-5 px-5">
+            <div class="col-6">
+                <a href="/create" class="btn btn-lg" id="verify" >Create</a>
+            </div>
+            <div class="col-6">
+                <a href="/join" class="btn btn-lg" id="verify" >Join</a>
+            </div>
+        </div>
+    {{else}}
+        <div class="row my-5 px-5">
+            <div class="col">
+                <a href="/create" class="btn btn-lg" id="verify" >Create</a>
+            </div>
+            <div class="col">
+                <a href="/join" class="btn btn-lg" id="verify" >Join</a>
+            </div>
+            <div class="col">
+                <a href="/resume" class="btn btn-lg" id="verify" >Resume</a>
+            </div>
+        </div>
+    {{end}}
+
+
+</div>
+<br>
+
+</body>
+</html>
